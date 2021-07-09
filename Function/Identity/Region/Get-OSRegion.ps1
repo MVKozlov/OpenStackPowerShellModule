@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .INPUTS
 
@@ -22,10 +22,10 @@ function Get-OSRegion
     [CmdLetBinding(DefaultParameterSetName = 'All')]
     Param
     (
-        [Parameter (ParameterSetName = 'ImputObject', Mandatory = $true, ValueFromPipeline=$true)]
+        [Parameter (ParameterSetName = 'InputObject', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Region')]
-        $ImputObject
+        $InputObject
     )
 
     process
@@ -41,14 +41,14 @@ function Get-OSRegion
                     Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get all Region"
                     Write-Output (Invoke-OSApiRequest -Type identity -Uri "regions" -Property 'regions' -ObjectType 'OS.Region')
                 }
-                'ImputObject'
+                'InputObject'
                 {
-                    foreach($ImputObject in $ImputObject)
+                    foreach($InputObject in $InputObject)
                     {
-                        $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Region'
+                        $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Region'
 
-                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Region [$ImputObject]"
-                        Write-Output (Invoke-OSApiRequest -Type identity -Uri "regions/$ImputObject" -Property 'region' -ObjectType 'OS.Region')
+                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Region [$InputObject]"
+                        Write-Output (Invoke-OSApiRequest -Type identity -Uri "regions/$InputObject" -Property 'region' -ObjectType 'OS.Region')
                     }
                 }
                 default

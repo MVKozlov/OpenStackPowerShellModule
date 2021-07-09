@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .PARAMETER Name
 
@@ -26,10 +26,10 @@ function Get-OSProject
     [CmdLetBinding(DefaultParameterSetName = 'All')]
     Param
     (
-        [Parameter (ParameterSetName = 'ImputObject', Mandatory = $true, ValueFromPipeline=$true)]
+        [Parameter (ParameterSetName = 'InputObject', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Project')]
-        $ImputObject,
+        $InputObject,
 
         [Parameter (ParameterSetName = 'Name', Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -53,14 +53,14 @@ function Get-OSProject
                     Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get all Project"
                     Write-Output (Invoke-OSApiRequest -Type identity -Uri "projects" -Property 'projects' -ObjectType 'OS.Project')
                 }
-                'ImputObject'
+                'InputObject'
                 {
-                    foreach($ImputObject in $ImputObject)
+                    foreach($InputObject in $InputObject)
                     {
-                        $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Project'
+                        $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Project'
 
-                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Project [$ImputObject]"
-                        Write-Output (Invoke-OSApiRequest -Type identity -Uri "projects/$ImputObject" -Property 'project' -ObjectType 'OS.Project')
+                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Project [$InputObject]"
+                        Write-Output (Invoke-OSApiRequest -Type identity -Uri "projects/$InputObject" -Property 'project' -ObjectType 'OS.Project')
                     }
                 }
                 'Name'

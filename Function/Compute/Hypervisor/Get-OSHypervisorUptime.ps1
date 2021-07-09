@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .INPUTS
 
@@ -25,7 +25,7 @@ function Get-OSHypervisorUptime
         [Parameter (ParameterSetName = 'Default', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Hypervisor')]
-        $ImputObject
+        $InputObject
     )
 
     process
@@ -34,12 +34,12 @@ function Get-OSHypervisorUptime
         {
             Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "start, ParameterSetName [$($PsCmdlet.ParameterSetName)]"
 
-            foreach($ImputObject in $ImputObject)
+            foreach($InputObject in $InputObject)
             {
-                $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Hypervisor'
+                $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Hypervisor'
 
-                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Hypervisor [$ImputObject] uptime"
-                Write-Output (Invoke-OSApiRequest -Type compute -Uri "/os-hypervisors/$ImputObject/uptime" -Property 'hypervisor' -ObjectType 'OS.HypervisorUptime')
+                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Hypervisor [$InputObject] uptime"
+                Write-Output (Invoke-OSApiRequest -Type compute -Uri "/os-hypervisors/$InputObject/uptime" -Property 'hypervisor' -ObjectType 'OS.HypervisorUptime')
             }
         }
         catch

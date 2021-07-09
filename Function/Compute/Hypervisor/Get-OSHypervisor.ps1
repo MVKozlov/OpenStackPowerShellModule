@@ -26,10 +26,10 @@ function Get-OSHypervisor
     [CmdLetBinding(DefaultParameterSetName = 'All')]
     Param
     (
-        [Parameter (ParameterSetName = 'ImputObject', Mandatory = $true, ValueFromPipeline=$true)]
+        [Parameter (ParameterSetName = 'InputObject', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Hypervisor')]
-        $ImputObject,
+        $InputObject,
 
         [Parameter (ParameterSetName = 'Hostname', Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -49,17 +49,17 @@ function Get-OSHypervisor
                     Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get all Hypervisor"
                     Write-Output (Invoke-OSApiRequest -Type compute -Uri "/os-hypervisors/detail" -Property 'hypervisors' -ObjectType 'OS.Hypervisor')
                 }
-                'ImputObject'
+                'InputObject'
                 {
-                    foreach($ImputObject in $ImputObject)
+                    foreach($InputObject in $InputObject)
                     {
-                        $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Hypervisor'
+                        $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Hypervisor'
 
                         #if multiple objects gets returned
-                        foreach($ImputObject in $ImputObject)
+                        foreach($InputObject in $InputObject)
                         {
-                            Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Hypervisor [$ImputObject]"
-                            Write-Output (Invoke-OSApiRequest -Type compute -Uri "/os-hypervisors/$ImputObject" -Property 'hypervisor' -ObjectType 'OS.Hypervisor')
+                            Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Hypervisor [$InputObject]"
+                            Write-Output (Invoke-OSApiRequest -Type compute -Uri "/os-hypervisors/$InputObject" -Property 'hypervisor' -ObjectType 'OS.Hypervisor')
                         }
                     }
                 }

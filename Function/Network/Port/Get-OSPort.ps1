@@ -24,10 +24,10 @@ function Get-OSPort
     [CmdLetBinding(DefaultParameterSetName = 'All')]
     Param
     (
-        [Parameter (ParameterSetName = 'ImputObject', Mandatory = $true, ValueFromPipeline=$true)]
+        [Parameter (ParameterSetName = 'InputObject', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Port')]
-        $ImputObject,
+        $InputObject,
 
         [Parameter (ParameterSetName = 'Name', Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -59,21 +59,21 @@ function Get-OSPort
                     Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get all Port"
                     Write-Output (Invoke-OSApiRequest -Type network -Uri "/v2.0/ports" -Property 'ports' -ObjectType 'OS.Port')
                 }
-                'ImputObject'
+                'InputObject'
                 {
-                    foreach($ImputObject in $ImputObject)
+                    foreach($InputObject in $InputObject)
                     {
                         #inteligent pipline
-                        if($ImputObject.pstypenames[0] -eq 'OS.Server')
+                        if($InputObject.pstypenames[0] -eq 'OS.Server')
                         {
-                            Get-OSPort -Server $ImputObject
+                            Get-OSPort -Server $InputObject
                         }
                         else 
                         {
-                            $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Port'
+                            $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Port'
 
-                            Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Port [$ImputObject]"
-                            Write-Output (Invoke-OSApiRequest -Type network -Uri "/v2.0/ports/$ImputObject" -Property 'port' -ObjectType 'OS.Port')
+                            Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Port [$InputObject]"
+                            Write-Output (Invoke-OSApiRequest -Type network -Uri "/v2.0/ports/$InputObject" -Property 'port' -ObjectType 'OS.Port')
                         }
                     }
                 }

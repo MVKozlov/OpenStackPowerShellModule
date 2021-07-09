@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .INPUTS
 
@@ -25,7 +25,7 @@ function Remove-OSSecurityGroupRule
         [Parameter (ParameterSetName = 'Default', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'SecurityGroupRule')]
-        $ImputObject
+        $InputObject
     )
 
     process
@@ -34,13 +34,13 @@ function Remove-OSSecurityGroupRule
         {
             Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "start"
 
-            foreach($ImputObject in $ImputObject)
+            foreach($InputObject in $InputObject)
             {
-                $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.SecurityGroupRule'
+                $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.SecurityGroupRule'
 
-                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "remove SecurityGroupRule [$ImputObject]"
+                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "remove SecurityGroupRule [$InputObject]"
                 
-                Invoke-OSApiRequest -HTTPVerb Delete -Type network -Uri "/v2.0/security-group-rules/$ImputObject" -NoOutput
+                Invoke-OSApiRequest -HTTPVerb Delete -Type network -Uri "/v2.0/security-group-rules/$InputObject" -NoOutput
             }
         }
         catch

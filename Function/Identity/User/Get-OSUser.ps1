@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .PARAMETER Name
 
@@ -26,10 +26,10 @@ function Get-OSUser
     [CmdLetBinding(DefaultParameterSetName = 'All')]
     Param
     (
-        [Parameter (ParameterSetName = 'ImputObject', Mandatory = $true, ValueFromPipeline=$true)]
+        [Parameter (ParameterSetName = 'InputObject', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'User')]
-        $ImputObject,
+        $InputObject,
 
         [Parameter (ParameterSetName = 'Name', Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -49,14 +49,14 @@ function Get-OSUser
                     Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get all User"
                     Write-Output (Invoke-OSApiRequest -Type identity -Uri "users" -Property 'users' -ObjectType 'OS.User')
                 }
-                'ImputObject'
+                'InputObject'
                 {
-                    foreach($ImputObject in $ImputObject)
+                    foreach($InputObject in $InputObject)
                     {
-                        $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.User'
+                        $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.User'
 
-                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get User [$ImputObject]"
-                        Write-Output (Invoke-OSApiRequest -Type identity -Uri "users/$ImputObject" -Property 'user' -ObjectType 'OS.User')
+                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get User [$InputObject]"
+                        Write-Output (Invoke-OSApiRequest -Type identity -Uri "users/$InputObject" -Property 'user' -ObjectType 'OS.User')
                     }
                 }
                 'Name'

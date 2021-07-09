@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .PARAMETER User
 
@@ -27,7 +27,7 @@ function Add-OSGroupMember
         [Parameter (ParameterSetName = 'Default', Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Group')]
-        $ImputObject,
+        $InputObject,
 
         [Parameter (ParameterSetName = 'Default', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
@@ -40,15 +40,15 @@ function Add-OSGroupMember
         {
             Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "start, ParameterSetName [$($PsCmdlet.ParameterSetName)]"
 
-            $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Group'
+            $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Group'
 
             foreach($User in $User)
             {
                 $User = Get-OSObjectIdentifierer -Object $User -PropertyHint 'OS.User'
 
-                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "add User [$User] to Group [$ImputObject]"
+                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "add User [$User] to Group [$InputObject]"
 
-                Invoke-OSApiRequest -HTTPVerb Put -Type identity -Uri "groups/$ImputObject/users/$User" -Body $Body -NoOutput
+                Invoke-OSApiRequest -HTTPVerb Put -Type identity -Uri "groups/$InputObject/users/$User" -Body $Body -NoOutput
             }
         }
         catch

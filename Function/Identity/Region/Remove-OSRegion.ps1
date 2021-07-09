@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .INPUTS
 
@@ -25,7 +25,7 @@ function Remove-OSRegion
         [Parameter (ParameterSetName = 'Default', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Region')]
-        $ImputObject
+        $InputObject
     )
 
     process
@@ -34,13 +34,13 @@ function Remove-OSRegion
         {
             Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "start"
 
-            foreach($ImputObject in $ImputObject)
+            foreach($InputObject in $InputObject)
             {
-                $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Region'
+                $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Region'
 
-                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "remove Region [$ImputObject]"
+                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "remove Region [$InputObject]"
                 
-                Invoke-OSApiRequest -HTTPVerb Delete -Type identity -Uri "regions/$ImputObject" -NoOutput
+                Invoke-OSApiRequest -HTTPVerb Delete -Type identity -Uri "regions/$InputObject" -NoOutput
             }
         }
         catch

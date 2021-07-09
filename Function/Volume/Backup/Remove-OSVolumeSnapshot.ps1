@@ -27,7 +27,7 @@ function Remove-OSVolumeBackup
         [Parameter (ParameterSetName = 'Default', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'VolumeBackup')]
-        $ImputObject
+        $InputObject
     )
 
     process
@@ -36,13 +36,13 @@ function Remove-OSVolumeBackup
         {
             Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "start"
 
-            foreach($ImputObject in $ImputObject)
+            foreach($InputObject in $InputObject)
             {
-                $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.VolumeBackup'
+                $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.VolumeBackup'
 
-                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "remove VolumeBackup [$ImputObject]"
+                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "remove VolumeBackup [$InputObject]"
                 
-                Invoke-OSApiRequest -HTTPVerb Delete -Type volumev3 -Uri "backups/$ImputObject" -NoOutput
+                Invoke-OSApiRequest -HTTPVerb Delete -Type volumev3 -Uri "backups/$InputObject" -NoOutput
             }
         }
         catch

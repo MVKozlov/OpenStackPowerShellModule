@@ -27,7 +27,7 @@ function Set-OSImage
         [Parameter (ParameterSetName = 'Default', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Image')]
-        $ImputObject,
+        $InputObject,
 
         [Parameter (ParameterSetName = 'Default', Mandatory = $false)]
         [ValidateNotNullOrEmpty()]
@@ -51,11 +51,11 @@ function Set-OSImage
         {
             Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "start"
 
-            foreach($ImputObject in $ImputObject)
+            foreach($InputObject in $InputObject)
             {
-                $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Image'
+                $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Image'
 
-                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "set Image [$ImputObject] [$Path] to [$Value]"
+                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "set Image [$InputObject] [$Path] to [$Value]"
 
                 #400 Bad Request Request body must be a JSON array of operation objects.
                 $Body = @([PSCustomObject]@{
@@ -64,7 +64,7 @@ function Set-OSImage
                     value=$Value
                 })
                 #415 Unsupported Media Type The request media type application/json is not supported by this server. --> The media type descriptor for the request body. Use application/openstack-images-v2.1-json-patch. (You can also use application/openstack-images-v2.0-json-patch, but keep in mind that it’s deprecated.)
-                Invoke-OSApiRequest -HTTPVerb Patch -Type image -ContentType 'application/openstack-images-v2.1-json-patch' -Uri "/v2/images/$ImputObject" -Body $Body -NoOutput
+                Invoke-OSApiRequest -HTTPVerb Patch -Type image -ContentType 'application/openstack-images-v2.1-json-patch' -Uri "/v2/images/$InputObject" -Body $Body -NoOutput
             }
         }
         catch

@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .INPUTS
 
@@ -25,7 +25,7 @@ function Remove-OSRole
         [Parameter (ParameterSetName = 'Default', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Role')]
-        $ImputObject
+        $InputObject
     )
 
     process
@@ -34,13 +34,13 @@ function Remove-OSRole
         {
             Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "start"
 
-            foreach($ImputObject in $ImputObject)
+            foreach($InputObject in $InputObject)
             {
-                $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Role'
+                $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Role'
 
-                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "remove Role [$ImputObject]"
+                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "remove Role [$InputObject]"
                 
-                Invoke-OSApiRequest -HTTPVerb Delete -Type identity -Uri "roles/$ImputObject" -NoOutput
+                Invoke-OSApiRequest -HTTPVerb Delete -Type identity -Uri "roles/$InputObject" -NoOutput
             }
         }
         catch

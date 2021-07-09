@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .INPUTS
 
@@ -25,7 +25,7 @@ function Remove-OSServer
         [Parameter (ParameterSetName = 'Default', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Server')]
-        $ImputObject
+        $InputObject
     )
 
     process
@@ -34,13 +34,13 @@ function Remove-OSServer
         {
             Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "start"
 
-            foreach($ImputObject in $ImputObject)
+            foreach($InputObject in $InputObject)
             {
-                $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Server'
+                $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Server'
 
-                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "start Server [$ImputObject]"
+                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "start Server [$InputObject]"
                 
-                Invoke-OSApiRequest -HTTPVerb Delete -Type compute -Uri "servers/$ImputObject" -NoOutput
+                Invoke-OSApiRequest -HTTPVerb Delete -Type compute -Uri "servers/$InputObject" -NoOutput
             }
         }
         catch

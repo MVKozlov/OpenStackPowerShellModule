@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .INPUTS
 
@@ -25,7 +25,7 @@ function Remove-OSNetwork
         [Parameter (ParameterSetName = 'Default', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Network')]
-        $ImputObject
+        $InputObject
     )
 
     process
@@ -34,13 +34,13 @@ function Remove-OSNetwork
         {
             Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "start"
 
-            foreach($ImputObject in $ImputObject)
+            foreach($InputObject in $InputObject)
             {
-                $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Network'
+                $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Network'
 
-                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "remove Network [$ImputObject]"
+                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "remove Network [$InputObject]"
                 
-                Invoke-OSApiRequest -HTTPVerb Delete -Type network -Uri "/v2.0/networks/$ImputObject" -NoOutput
+                Invoke-OSApiRequest -HTTPVerb Delete -Type network -Uri "/v2.0/networks/$InputObject" -NoOutput
             }
         }
         catch

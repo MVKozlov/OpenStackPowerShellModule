@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .INPUTS
 
@@ -25,7 +25,7 @@ function Get-OSServerDiagnostic
         [Parameter (ParameterSetName = 'Default', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Server')]
-        $ImputObject
+        $InputObject
     )
 
     process
@@ -34,10 +34,10 @@ function Get-OSServerDiagnostic
         {
             Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "start, ParameterSetName [$($PsCmdlet.ParameterSetName)]"
 
-            $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Server'
+            $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Server'
 
-            Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Server [$ImputObject] Diagnostic"
-            Write-Output (Invoke-OSApiRequest -Type compute -Uri "servers/$ImputObject/diagnostics" -ObjectType 'OS.ServerDiagnostic')
+            Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Server [$InputObject] Diagnostic"
+            Write-Output (Invoke-OSApiRequest -Type compute -Uri "servers/$InputObject/diagnostics" -ObjectType 'OS.ServerDiagnostic')
         }
         catch
         {

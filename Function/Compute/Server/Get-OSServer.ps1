@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .PARAMETER Name
 
@@ -40,10 +40,10 @@ function Get-OSServer
     [CmdLetBinding(DefaultParameterSetName = 'All')]
     Param
     (
-        [Parameter (ParameterSetName = 'ImputObject', Mandatory = $true, ValueFromPipeline=$true)]
+        [Parameter (ParameterSetName = 'InputObject', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Server')]
-        $ImputObject,
+        $InputObject,
 
         [Parameter (ParameterSetName = 'Name', Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -63,14 +63,14 @@ function Get-OSServer
                     Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get all Server"
                     Write-Output (Invoke-OSApiRequest -Type compute -Uri "servers/detail" -Property 'servers' -ObjectType 'OS.Server')
                 }
-                'ImputObject'
+                'InputObject'
                 {
-                    foreach($ImputObject in $ImputObject)
+                    foreach($InputObject in $InputObject)
                     {
-                        $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Server'
+                        $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Server'
 
-                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Server [$ImputObject]"
-                        Write-Output (Invoke-OSApiRequest -Type compute -Uri "servers/$ImputObject" -Property 'server' -ObjectType 'OS.Server')
+                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Server [$InputObject]"
+                        Write-Output (Invoke-OSApiRequest -Type compute -Uri "servers/$InputObject" -Property 'server' -ObjectType 'OS.Server')
                     }
                 }
                 'Name'

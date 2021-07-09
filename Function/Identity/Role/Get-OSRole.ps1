@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .PARAMETER Name
 
@@ -26,10 +26,10 @@ function Get-OSRole
     [CmdLetBinding(DefaultParameterSetName = 'All')]
     Param
     (
-        [Parameter (ParameterSetName = 'ImputObject', Mandatory = $true, ValueFromPipeline=$true)]
+        [Parameter (ParameterSetName = 'InputObject', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Role')]
-        $ImputObject,
+        $InputObject,
 
         [Parameter (ParameterSetName = 'Name', Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -49,14 +49,14 @@ function Get-OSRole
                     Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get all Role"
                     Write-Output (Invoke-OSApiRequest -Type identity -Uri "roles" -Property 'roles' -ObjectType 'OS.Role')
                 }
-                'ImputObject'
+                'InputObject'
                 {
-                    foreach($ImputObject in $ImputObject)
+                    foreach($InputObject in $InputObject)
                     {
-                        $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Role'
+                        $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Role'
 
-                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Role [$ImputObject]"
-                        Write-Output (Invoke-OSApiRequest -Type identity -Uri "roles/$ImputObject" -Property 'role' -ObjectType 'OS.Role')
+                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Role [$InputObject]"
+                        Write-Output (Invoke-OSApiRequest -Type identity -Uri "roles/$InputObject" -Property 'role' -ObjectType 'OS.Role')
                     }
                 }
                 'Name'

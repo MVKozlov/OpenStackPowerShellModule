@@ -24,10 +24,10 @@ function Get-OSVolumeBackup
     [CmdLetBinding(DefaultParameterSetName = 'All')]
     Param
     (
-        [Parameter (ParameterSetName = 'ImputObject', Mandatory = $true, ValueFromPipeline=$true)]
+        [Parameter (ParameterSetName = 'InputObject', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Port')]
-        $ImputObject,
+        $InputObject,
 
         [Parameter (ParameterSetName = 'Name', Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -47,14 +47,14 @@ function Get-OSVolumeBackup
                     Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get all VolumeBackup"
                     Write-Output (Invoke-OSApiRequest -Type volumev3 -Uri "backups/detail" -Property 'backups' -ObjectType 'OS.VolumeBackup')
                 }
-                'ImputObject'
+                'InputObject'
                 {
-                    foreach($ImputObject in $ImputObject)
+                    foreach($InputObject in $InputObject)
                     {
-                        $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.VolumeBackup'
+                        $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.VolumeBackup'
 
-                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get VolumeBackup [$ImputObject]"
-                        Write-Output (Invoke-OSApiRequest -Type volumev3 -Uri "backups/$ImputObject" -Property 'backup' -ObjectType 'OS.VolumeBackup')
+                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get VolumeBackup [$InputObject]"
+                        Write-Output (Invoke-OSApiRequest -Type volumev3 -Uri "backups/$InputObject" -Property 'backup' -ObjectType 'OS.VolumeBackup')
                     }
                 }
                 'Name'

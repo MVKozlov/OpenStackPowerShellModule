@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .PARAMETER Name
 
@@ -29,7 +29,7 @@ function Set-OSPort
         [Parameter (ParameterSetName = 'Default', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Port')]
-        $ImputObject,
+        $InputObject,
 
         [Parameter (ParameterSetName = 'Default', Mandatory = $false)]
         [string]$Name,
@@ -44,18 +44,18 @@ function Set-OSPort
         {
             Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "start"
 
-            foreach($ImputObject in $ImputObject)
+            foreach($InputObject in $InputObject)
             {
-                $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Port'
+                $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Port'
 
                 $BodyProperties = @{}
                 if($PSBoundParameters.ContainsKey('Name')){$BodyProperties.Add('name', $Name)}
                 if($PSBoundParameters.ContainsKey('Description')){$BodyProperties.Add('description', $Description)}
                 $BodyObject = [PSCustomObject]@{port=$BodyProperties}
 
-                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "set Port [$ImputObject]"
+                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "set Port [$InputObject]"
                 
-                Write-Output (Invoke-OSApiRequest -HTTPVerb Put -Type network -Uri "/v2.0/ports/$ImputObject" -Property 'port' -ObjectType 'OS.Port' -Body $BodyObject)
+                Write-Output (Invoke-OSApiRequest -HTTPVerb Put -Type network -Uri "/v2.0/ports/$InputObject" -Property 'port' -ObjectType 'OS.Port' -Body $BodyObject)
             }
         }
         catch

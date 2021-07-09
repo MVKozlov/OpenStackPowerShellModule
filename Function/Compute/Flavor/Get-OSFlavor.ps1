@@ -26,10 +26,10 @@ function Get-OSFlavor
     [CmdLetBinding(DefaultParameterSetName = 'All')]
     Param
     (
-        [Parameter (ParameterSetName = 'ImputObject', Mandatory = $true, ValueFromPipeline=$true)]
+        [Parameter (ParameterSetName = 'InputObject', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Flavor')]
-        $ImputObject,
+        $InputObject,
 
         [Parameter (ParameterSetName = 'Name', Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -49,21 +49,21 @@ function Get-OSFlavor
                     Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get all Flavors"
                     Write-Output (Invoke-OSApiRequest -Type compute -Uri "/flavors/detail" -Property 'flavors' -ObjectType 'OS.Flavor')
                 }
-                'ImputObject'
+                'InputObject'
                 {
-                    foreach($ImputObject in $ImputObject)
+                    foreach($InputObject in $InputObject)
                     {
                         #inteligent pipline
-                        if($ImputObject.pstypenames[0] -eq 'OS.Server')
+                        if($InputObject.pstypenames[0] -eq 'OS.Server')
                         {
-                            Get-OSFlavor -ID $ImputObject.flavor.id
+                            Get-OSFlavor -ID $InputObject.flavor.id
                         }
                         else 
                         {
-                            $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Flavor'
+                            $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Flavor'
 
-                            Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Flavor [$ImputObject]"
-                            Write-Output (Invoke-OSApiRequest -Type compute -Uri "/flavors/$ImputObject" -Property 'flavor' -ObjectType 'OS.Flavor')
+                            Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Flavor [$InputObject]"
+                            Write-Output (Invoke-OSApiRequest -Type compute -Uri "/flavors/$InputObject" -Property 'flavor' -ObjectType 'OS.Flavor')
                         }
                     }
                 }

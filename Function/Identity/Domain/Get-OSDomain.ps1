@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .PARAMETER Name
 
@@ -26,10 +26,10 @@ function Get-OSDomain
     [CmdLetBinding(DefaultParameterSetName = 'All')]
     Param
     (
-        [Parameter (ParameterSetName = 'ImputObject', Mandatory = $true, ValueFromPipeline=$true)]
+        [Parameter (ParameterSetName = 'InputObject', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Domain')]
-        $ImputObject,
+        $InputObject,
 
         [Parameter (ParameterSetName = 'Name', Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -49,14 +49,14 @@ function Get-OSDomain
                     Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get all Domain"
                     Write-Output (Invoke-OSApiRequest -Type identity -Uri "domains" -Property 'domains' -ObjectType 'OS.Domain')
                 }
-                'ImputObject'
+                'InputObject'
                 {
-                    foreach($ImputObject in $ImputObject)
+                    foreach($InputObject in $InputObject)
                     {
-                        $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Domain'
+                        $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Domain'
 
-                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Domain [$ImputObject]"
-                        Write-Output (Invoke-OSApiRequest -Type identity -Uri "domains/$ImputObject" -Property 'domain' -ObjectType 'OS.Domain')
+                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Domain [$InputObject]"
+                        Write-Output (Invoke-OSApiRequest -Type identity -Uri "domains/$InputObject" -Property 'domain' -ObjectType 'OS.Domain')
                     }
                 }
                 'Name'

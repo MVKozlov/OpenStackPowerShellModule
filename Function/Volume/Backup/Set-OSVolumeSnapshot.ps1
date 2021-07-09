@@ -27,7 +27,7 @@ function Set-OSVolumeBackup
         [Parameter (ParameterSetName = 'Default', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'VolumeBackup')]
-        $ImputObject,
+        $InputObject,
 
         [Parameter (ParameterSetName = 'Default', Mandatory = $false)]
         [ValidateNotNullOrEmpty()]
@@ -48,11 +48,11 @@ function Set-OSVolumeBackup
         {
             Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "start"
 
-            foreach($ImputObject in $ImputObject)
+            foreach($InputObject in $InputObject)
             {
-                $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.VolumeBackup'
+                $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.VolumeBackup'
 
-                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "set VolumeBackup [$ImputObject]"
+                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "set VolumeBackup [$InputObject]"
                     
                 $Body = [PSCustomObject]@{backup=$null}
                 $BodyProperties = @{
@@ -62,7 +62,7 @@ function Set-OSVolumeBackup
                 if($Metadata){$BodyProperties.Add('metadata', $Metadata)}
                 $Body.backup = $BodyProperties
 
-                Invoke-OSApiRequest -HTTPVerb Put -Type volumev3 -Uri "backups/$ImputObject" -Body $Body -NoOutput
+                Invoke-OSApiRequest -HTTPVerb Put -Type volumev3 -Uri "backups/$InputObject" -Body $Body -NoOutput
             }
         }
         catch

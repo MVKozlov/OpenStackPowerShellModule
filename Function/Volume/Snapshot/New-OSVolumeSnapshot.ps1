@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     The source volume ID.
 
@@ -39,7 +39,7 @@ function New-OSVolumeSnapshot
         [Parameter (ParameterSetName = 'Default', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Volume')]
-        $ImputObject,
+        $InputObject,
 
         [Parameter (ParameterSetName = 'Default', Mandatory = $false)]
         [ValidateNotNullOrEmpty()]
@@ -60,15 +60,15 @@ function New-OSVolumeSnapshot
         {
             Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "start"
 
-            foreach($ImputObject in $ImputObject)
+            foreach($InputObject in $InputObject)
             {
-                $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Volume'
+                $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Volume'
 
-                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "create VolumeSnapshot [$Name] from Volume [$ImputObject]"
+                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "create VolumeSnapshot [$Name] from Volume [$InputObject]"
                     
                 $Body = [PSCustomObject]@{snapshot=$null}
                 $BodyProperties = @{
-                    'volume_id' = $ImputObject
+                    'volume_id' = $InputObject
                 }
                 if($Name){$BodyProperties.Add('name', $Name)}
                 if($Description){$BodyProperties.Add('description', $Description)}

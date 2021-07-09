@@ -5,7 +5,7 @@
 
     A set of zero or more allowed address pair objects each where address pair object contains an ip_address and mac_address. While the ip_address is required, the mac_address will be taken from the port if not specified. The value of ip_address can be an IP Address or a CIDR (if supported by the underlying extension plugin). A server connected to the port can send a packet with source address which matches one of the specified allowed address pairs.
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .PARAMETER IpAddress
 
@@ -31,7 +31,7 @@ function Add-OSPortAllowedAddressPair
         [Parameter (ParameterSetName = 'Default', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Port')]
-        $ImputObject,
+        $InputObject,
     
         [Parameter (ParameterSetName = 'Default', Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -48,13 +48,13 @@ function Add-OSPortAllowedAddressPair
         {
             Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "start"
 
-            foreach($ImputObject in $ImputObject)
+            foreach($InputObject in $InputObject)
             {
-                $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Port'
+                $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Port'
                 
                 foreach($IpAddress in $IpAddress)
                 {
-                    $Port = $ImputObject | Get-OSPort
+                    $Port = $InputObject | Get-OSPort
 
                     if($Port.allowed_address_pairs.ip_address -contains $IpAddress)
                     {
@@ -69,9 +69,9 @@ function Add-OSPortAllowedAddressPair
                     $AllowedAddressPair += $BodyProperties
                     $BodyObject = [PSCustomObject]@{port=[PSCustomObject]@{allowed_address_pairs=$AllowedAddressPair}}
 
-                    Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "add AllowedAddressPair [$IpAddress] to Port [$ImputObject], MacAddress [$MacAddress]"
+                    Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "add AllowedAddressPair [$IpAddress] to Port [$InputObject], MacAddress [$MacAddress]"
                     
-                    Write-Output (Invoke-OSApiRequest -HTTPVerb Put -Type network -Uri "/v2.0/ports/$ImputObject" -Property 'port' -ObjectType 'OS.Port' -Body $BodyObject)
+                    Write-Output (Invoke-OSApiRequest -HTTPVerb Put -Type network -Uri "/v2.0/ports/$InputObject" -Property 'port' -ObjectType 'OS.Port' -Body $BodyObject)
                 }
             }
         }

@@ -24,10 +24,10 @@ function Get-OSNetwork
     [CmdLetBinding(DefaultParameterSetName = 'All')]
     Param
     (
-        [Parameter (ParameterSetName = 'ImputObject', Mandatory = $true, ValueFromPipeline=$true)]
+        [Parameter (ParameterSetName = 'InputObject', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Network')]
-        $ImputObject,
+        $InputObject,
 
         [Parameter (ParameterSetName = 'Name', Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -47,14 +47,14 @@ function Get-OSNetwork
                     Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get all Network"
                     Write-Output (Invoke-OSApiRequest -Type network -Uri "/v2.0/networks" -Property 'networks' -ObjectType 'OS.Network')
                 }
-                'ImputObject'
+                'InputObject'
                 {
-                    foreach($ImputObject in $ImputObject)
+                    foreach($InputObject in $InputObject)
                     {
-                        $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Network'
+                        $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Network'
 
-                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Network [$ImputObject]"
-                        Write-Output (Invoke-OSApiRequest -Type network -Uri "/v2.0/networks/$ImputObject" -Property 'network' -ObjectType 'OS.Network')
+                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Network [$InputObject]"
+                        Write-Output (Invoke-OSApiRequest -Type network -Uri "/v2.0/networks/$InputObject" -Property 'network' -ObjectType 'OS.Network')
                     }
                 }
                 'Name'

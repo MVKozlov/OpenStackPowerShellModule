@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .PARAMETER Name
 
@@ -24,10 +24,10 @@ function Get-OSRBACPolicy
     [CmdLetBinding(DefaultParameterSetName = 'All')]
     Param
     (
-        [Parameter (ParameterSetName = 'ImputObject', Mandatory = $true, ValueFromPipeline=$true)]
+        [Parameter (ParameterSetName = 'InputObject', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'RBACPolicy')]
-        $ImputObject
+        $InputObject
     )
 
     process
@@ -43,14 +43,14 @@ function Get-OSRBACPolicy
                     Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get all RBACPolicy"
                     Write-Output (Invoke-OSApiRequest -Type network -Uri "/v2.0/rbac_policies" -Property 'rbac_policies' -ObjectType 'OS.RBACPolicy')
                 }
-                'ImputObject'
+                'InputObject'
                 {
-                    foreach($ImputObject in $ImputObject)
+                    foreach($InputObject in $InputObject)
                     {
-                        $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.RBACPolicy'
+                        $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.RBACPolicy'
 
-                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get RBACPolicy [$ImputObject]"
-                        Write-Output (Invoke-OSApiRequest -Type network -Uri "/v2.0/rbac_policies/$ImputObject" -Property 'rbac_policie' -ObjectType 'OS.RBACPolicy')
+                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get RBACPolicy [$InputObject]"
+                        Write-Output (Invoke-OSApiRequest -Type network -Uri "/v2.0/rbac_policies/$InputObject" -Property 'rbac_policie' -ObjectType 'OS.RBACPolicy')
                     }
                 }
                 default

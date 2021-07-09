@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .PARAMETER Name
 
@@ -30,10 +30,10 @@ function Get-OSSecurityGroup
     [CmdLetBinding(DefaultParameterSetName = 'All')]
     Param
     (
-        [Parameter (ParameterSetName = 'ImputObject', Mandatory = $true, ValueFromPipeline=$true)]
+        [Parameter (ParameterSetName = 'InputObject', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'SecurityGroup')]
-        $ImputObject,
+        $InputObject,
 
         [Parameter (ParameterSetName = 'Name', Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -57,21 +57,21 @@ function Get-OSSecurityGroup
                     Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get all SecurityGroup"
                     Write-Output (Invoke-OSApiRequest -Type network -Uri "/v2.0/security-groups" -Property 'security_groups' -ObjectType 'OS.SecurityGroup')
                 }
-                'ImputObject'
+                'InputObject'
                 {
-                    foreach($ImputObject in $ImputObject)
+                    foreach($InputObject in $InputObject)
                     {
                         #inteligent pipline
-                        if($ImputObject.pstypenames[0] -eq 'OS.Server')
+                        if($InputObject.pstypenames[0] -eq 'OS.Server')
                         {
-                            Get-OSSecurityGroup -Server $ImputObject
+                            Get-OSSecurityGroup -Server $InputObject
                         }
                         else 
                         {
-                            $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.SecurityGroup'
+                            $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.SecurityGroup'
 
-                            Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get SecurityGroup [$ImputObject]"
-                            Write-Output (Invoke-OSApiRequest -Type network -Uri "/v2.0/security-groups/$ImputObject" -Property 'security_group' -ObjectType 'OS.SecurityGroup')
+                            Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get SecurityGroup [$InputObject]"
+                            Write-Output (Invoke-OSApiRequest -Type network -Uri "/v2.0/security-groups/$InputObject" -Property 'security_group' -ObjectType 'OS.SecurityGroup')
                         }
                     }
                 }

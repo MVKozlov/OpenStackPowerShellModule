@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .PARAMETER Name
 
@@ -26,10 +26,10 @@ function Get-OSService
     [CmdLetBinding(DefaultParameterSetName = 'All')]
     Param
     (
-        [Parameter (ParameterSetName = 'ImputObject', Mandatory = $true, ValueFromPipeline=$true)]
+        [Parameter (ParameterSetName = 'InputObject', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Service')]
-        $ImputObject,
+        $InputObject,
 
         [Parameter (ParameterSetName = 'Name', Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -49,14 +49,14 @@ function Get-OSService
                     Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get all Service"
                     Write-Output (Invoke-OSApiRequest -Type identity -Uri "services" -Property 'services' -ObjectType 'OS.Service')
                 }
-                'ImputObject'
+                'InputObject'
                 {
-                    foreach($ImputObject in $ImputObject)
+                    foreach($InputObject in $InputObject)
                     {
-                        $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Service'
+                        $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Service'
 
-                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Service [$ImputObject]"
-                        Write-Output (Invoke-OSApiRequest -Type identity -Uri "services/$ImputObject" -Property 'service' -ObjectType 'OS.Service')
+                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Service [$InputObject]"
+                        Write-Output (Invoke-OSApiRequest -Type identity -Uri "services/$InputObject" -Property 'service' -ObjectType 'OS.Service')
                     }
                 }
                 'Name'

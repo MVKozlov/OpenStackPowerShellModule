@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .PARAMETER Name
 
@@ -26,10 +26,10 @@ function Get-OSVolume
     [CmdLetBinding(DefaultParameterSetName = 'All')]
     Param
     (
-        [Parameter (ParameterSetName = 'ImputObject', Mandatory = $true, ValueFromPipeline=$true)]
+        [Parameter (ParameterSetName = 'InputObject', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Volume')]
-        $ImputObject,
+        $InputObject,
 
         [Parameter (ParameterSetName = 'Name', Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -53,17 +53,17 @@ function Get-OSVolume
                     Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get all Volume"
                     Write-Output (Invoke-OSApiRequest -Type volumev3 -Uri "volumes/detail" -Property 'volumes' -ObjectType 'OS.Volume')
                 }
-                'ImputObject'
+                'InputObject'
                 {
-                    foreach($ImputObject in $ImputObject)
+                    foreach($InputObject in $InputObject)
                     {
-                        $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Volume'
+                        $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Volume'
 
                         #if multiple objects gets returned
-                        foreach($ImputObject in $ImputObject)
+                        foreach($InputObject in $InputObject)
                         {
-                            Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Volume [$ImputObject]"
-                            Write-Output (Invoke-OSApiRequest -Type volumev3 -Uri "volumes/$ImputObject" -Property 'volume' -ObjectType 'OS.Volume')
+                            Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Volume [$InputObject]"
+                            Write-Output (Invoke-OSApiRequest -Type volumev3 -Uri "volumes/$InputObject" -Property 'volume' -ObjectType 'OS.Volume')
                         }
                     }
                 }

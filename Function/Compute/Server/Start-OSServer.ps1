@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .INPUTS
 
@@ -25,7 +25,7 @@ function Start-OSServer
         [Parameter (ParameterSetName = 'Default', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Server')]
-        $ImputObject
+        $InputObject
     )
 
     process
@@ -34,13 +34,13 @@ function Start-OSServer
         {
             Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "start"
 
-            foreach($ImputObject in $ImputObject)
+            foreach($InputObject in $InputObject)
             {
-                $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Server'
+                $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Server'
 
-                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "start Server [$ImputObject]"
+                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "start Server [$InputObject]"
                 
-                Invoke-OSApiRequest -HTTPVerb Post -Type compute -Uri "servers/$ImputObject/action" -NoOutput -Body ([PSCustomObject]@{'os-start'=$null})
+                Invoke-OSApiRequest -HTTPVerb Post -Type compute -Uri "servers/$InputObject/action" -NoOutput -Body ([PSCustomObject]@{'os-start'=$null})
             }
         }
         catch

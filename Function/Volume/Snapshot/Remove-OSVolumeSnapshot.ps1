@@ -27,7 +27,7 @@ function Remove-OSVolumeSnapshot
         [Parameter (ParameterSetName = 'Default', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'VolumeSnapshot')]
-        $ImputObject
+        $InputObject
     )
 
     process
@@ -36,13 +36,13 @@ function Remove-OSVolumeSnapshot
         {
             Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "start"
 
-            foreach($ImputObject in $ImputObject)
+            foreach($InputObject in $InputObject)
             {
-                $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.VolumeSnapshot'
+                $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.VolumeSnapshot'
 
-                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "remove VolumeSnapshot [$ImputObject]"
+                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "remove VolumeSnapshot [$InputObject]"
                 
-                Invoke-OSApiRequest -HTTPVerb Delete -Type volumev3 -Uri "snapshots/$ImputObject" -NoOutput
+                Invoke-OSApiRequest -HTTPVerb Delete -Type volumev3 -Uri "snapshots/$InputObject" -NoOutput
             }
         }
         catch

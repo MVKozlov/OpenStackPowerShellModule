@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
     .INPUTS
 
     .OUTPUTS
@@ -24,7 +24,7 @@ function Stop-OSServer
         [Parameter (ParameterSetName = 'Default', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Server')]
-        $ImputObject
+        $InputObject
     )
 
     process
@@ -33,13 +33,13 @@ function Stop-OSServer
         {
             Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "start"
 
-            foreach($ImputObject in $ImputObject)
+            foreach($InputObject in $InputObject)
             {
-                $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Server'
+                $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Server'
 
-                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "stop Server [$ImputObject]"
+                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "stop Server [$InputObject]"
                 
-                Invoke-OSApiRequest -HTTPVerb Post -Type compute -Uri "servers/$ImputObject/action" -NoOutput -Body ([PSCustomObject]@{'os-stop'=$null})
+                Invoke-OSApiRequest -HTTPVerb Post -Type compute -Uri "servers/$InputObject/action" -NoOutput -Body ([PSCustomObject]@{'os-stop'=$null})
             }
         }
         catch

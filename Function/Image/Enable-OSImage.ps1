@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .INPUTS
 
@@ -25,7 +25,7 @@ function Enable-OSImage
         [Parameter (ParameterSetName = 'Default', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Image')]
-        $ImputObject
+        $InputObject
     )
 
     process
@@ -34,13 +34,13 @@ function Enable-OSImage
         {
             Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "start"
 
-            foreach($ImputObject in $ImputObject)
+            foreach($InputObject in $InputObject)
             {
-                $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Image'
+                $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Image'
 
-                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "enable Image [$ImputObject]"
+                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "enable Image [$InputObject]"
                 
-                Invoke-OSApiRequest -HTTPVerb Post -Type image -Uri "/v2/images/$ImputObject/actions/reactivate" -NoOutput
+                Invoke-OSApiRequest -HTTPVerb Post -Type image -Uri "/v2/images/$InputObject/actions/reactivate" -NoOutput
             }
         }
         catch

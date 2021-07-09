@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .INPUTS
 
@@ -22,10 +22,10 @@ function Get-OSEndpoint
     [CmdLetBinding(DefaultParameterSetName = 'All')]
     Param
     (
-        [Parameter (ParameterSetName = 'ImputObject', Mandatory = $true, ValueFromPipeline=$true)]
+        [Parameter (ParameterSetName = 'InputObject', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Endpoint')]
-        $ImputObject
+        $InputObject
     )
 
     process
@@ -41,14 +41,14 @@ function Get-OSEndpoint
                     Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get all Endpoint"
                     Write-Output (Invoke-OSApiRequest -Type identity -Uri "endpoints" -Property 'endpoints' -ObjectType 'OS.Endpoint')
                 }
-                'ImputObject'
+                'InputObject'
                 {
-                    foreach($ImputObject in $ImputObject)
+                    foreach($InputObject in $InputObject)
                     {
-                        $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Endpoint'
+                        $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Endpoint'
 
-                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Endpoint [$ImputObject]"
-                        Write-Output (Invoke-OSApiRequest -Type identity -Uri "endpoints/$ImputObject" -Property 'endpoint' -ObjectType 'OS.Endpoint')
+                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Endpoint [$InputObject]"
+                        Write-Output (Invoke-OSApiRequest -Type identity -Uri "endpoints/$InputObject" -Property 'endpoint' -ObjectType 'OS.Endpoint')
                     }
                 }
                 default

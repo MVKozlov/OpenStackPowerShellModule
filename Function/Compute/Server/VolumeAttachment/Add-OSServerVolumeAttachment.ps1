@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .PARAMETER Server
 
@@ -31,7 +31,7 @@ function Add-OSServerVolumeAttachment
         [Parameter (ParameterSetName = 'Default', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Volume')]
-        $ImputObject,
+        $InputObject,
 
         [Parameter (ParameterSetName = 'Default', Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -50,19 +50,19 @@ function Add-OSServerVolumeAttachment
 
             $Server = Get-OSObjectIdentifierer -Object $Server -PropertyHint 'OS.Server'
 
-            foreach($ImputObject in $ImputObject)
+            foreach($InputObject in $InputObject)
             {
-                $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Volume'
+                $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Volume'
 
-                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "add VolumeAttachment [$ImputObject] to Server [$Server]"
+                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "add VolumeAttachment [$InputObject] to Server [$Server]"
 
                 if($Device)
                 {
-                    $Body = ([PSCustomObject]@{volumeAttachment=[PSCustomObject]@{volumeId=$ImputObject; device=$Device}})
+                    $Body = ([PSCustomObject]@{volumeAttachment=[PSCustomObject]@{volumeId=$InputObject; device=$Device}})
                 }
                 else 
                 {
-                    $Body = ([PSCustomObject]@{volumeAttachment=[PSCustomObject]@{volumeId=$ImputObject}})
+                    $Body = ([PSCustomObject]@{volumeAttachment=[PSCustomObject]@{volumeId=$InputObject}})
                 }
                 Invoke-OSApiRequest -HTTPVerb Post -Type compute -Uri "servers/$Server/os-volume_attachments" -Property 'volumeAttachment' -ObjectType 'OS.ServerVolumeAttachment' -Body $Body
             }

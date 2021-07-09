@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .PARAMETER ServerAction
 
@@ -30,7 +30,7 @@ function Get-OSServerAction
         [Parameter (ParameterSetName = 'ServerAction', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Server')]
-        $ImputObject,
+        $InputObject,
 
         [Parameter (ParameterSetName = 'ServerAction', Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -48,24 +48,24 @@ function Get-OSServerAction
             {
                 'Default'
                 {
-                    foreach($ImputObject in $ImputObject)
+                    foreach($InputObject in $InputObject)
                     {
-                        $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Server'
+                        $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Server'
 
-                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Server [$ImputObject] actions"
-                        Write-Output (Invoke-OSApiRequest -Type compute -Uri "servers/$ImputObject/os-instance-actions" -Property 'instanceActions' -ObjectType 'OS.ServerAction')
+                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Server [$InputObject] actions"
+                        Write-Output (Invoke-OSApiRequest -Type compute -Uri "servers/$InputObject/os-instance-actions" -Property 'instanceActions' -ObjectType 'OS.ServerAction')
                     }
                 }
                 'ServerAction'
                 {
                     $ServerAction = Get-OSObjectIdentifierer -Object $ServerAction -PropertyHint 'OS.ServerAction'
 
-                    foreach($ImputObject in $ImputObject)
+                    foreach($InputObject in $InputObject)
                     {
-                        $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Server'
+                        $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Server'
 
-                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Server [$ImputObject] action [$ServerAction]"
-                        Write-Output (Invoke-OSApiRequest -Type compute -Uri "servers/$ImputObject/os-instance-actions/$ServerAction" -Property 'instanceAction' -ObjectType 'OS.ServerAction')
+                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Server [$InputObject] action [$ServerAction]"
+                        Write-Output (Invoke-OSApiRequest -Type compute -Uri "servers/$InputObject/os-instance-actions/$ServerAction" -Property 'instanceAction' -ObjectType 'OS.ServerAction')
                     }
                 }
                 default

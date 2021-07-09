@@ -26,10 +26,10 @@ function Get-OSAggregate
     [CmdLetBinding(DefaultParameterSetName = 'All')]
     Param
     (
-        [Parameter (ParameterSetName = 'ImputObject', Mandatory = $true, ValueFromPipeline=$true)]
+        [Parameter (ParameterSetName = 'InputObject', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Aggregate')]
-        $ImputObject,
+        $InputObject,
 
         [Parameter (ParameterSetName = 'Name', Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -49,14 +49,14 @@ function Get-OSAggregate
                     Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get all Aggregate"
                     Write-Output (Invoke-OSApiRequest -Type compute -Uri "/os-aggregates" -Property 'aggregates' -ObjectType 'OS.Aggregate')
                 }
-                'ImputObject'
+                'InputObject'
                 {
-                    foreach($ImputObject in $ImputObject)
+                    foreach($InputObject in $InputObject)
                     {
-                        $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Aggregate'
+                        $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Aggregate'
 
-                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Aggregate [$ImputObject]"
-                        Write-Output (Invoke-OSApiRequest -Type compute -Uri "/os-aggregates/$ImputObject" -Property 'aggregate' -ObjectType 'OS.Aggregate')
+                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Aggregate [$InputObject]"
+                        Write-Output (Invoke-OSApiRequest -Type compute -Uri "/os-aggregates/$InputObject" -Property 'aggregate' -ObjectType 'OS.Aggregate')
                     }
                 }
                 'Name'

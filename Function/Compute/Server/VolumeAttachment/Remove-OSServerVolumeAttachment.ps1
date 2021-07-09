@@ -26,7 +26,7 @@ function Remove-OSServerVolumeAttachment
     (
         [Parameter (ParameterSetName = 'Default', Mandatory = $true)]
         [Alias('ID', 'Identity', 'Volume')]
-        $ImputObject,
+        $InputObject,
 
         [Parameter (ParameterSetName = 'Default', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
@@ -41,12 +41,12 @@ function Remove-OSServerVolumeAttachment
 
             $Server = Get-OSObjectIdentifierer -Object $Server -PropertyHint 'OS.Server'
 
-            foreach($ImputObject in $ImputObject)
+            foreach($InputObject in $InputObject)
             {
-                $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Volume'
+                $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Volume'
 
-                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "remove Server [$Server] Volume [$ImputObject]"
-                Invoke-OSApiRequest -HTTPVerb Delete -Type compute -Uri "servers/$Server/os-volume_attachments/$ImputObject" -NoOutput
+                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "remove Server [$Server] Volume [$InputObject]"
+                Invoke-OSApiRequest -HTTPVerb Delete -Type compute -Uri "servers/$Server/os-volume_attachments/$InputObject" -NoOutput
             }
         }
         catch

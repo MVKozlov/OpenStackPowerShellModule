@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .INPUTS
 
@@ -22,10 +22,10 @@ function Get-OSImage
     [CmdLetBinding(DefaultParameterSetName = 'All')]
     Param
     (
-        [Parameter (ParameterSetName = 'ImputObject', Mandatory = $true, ValueFromPipeline=$true)]
+        [Parameter (ParameterSetName = 'InputObject', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Image')]
-        $ImputObject,
+        $InputObject,
 
         [Parameter (ParameterSetName = 'Name', Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -45,17 +45,17 @@ function Get-OSImage
                     Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get all Image"
                     Write-Output (Invoke-OSApiRequest -Type image -Uri "/v2/images" -Property 'images' -ObjectType 'OS.Image')
                 }
-                'ImputObject'
+                'InputObject'
                 {
-                    foreach($ImputObject in $ImputObject)
+                    foreach($InputObject in $InputObject)
                     {
-                        $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Image'
+                        $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Image'
 
                         #if multiple objects gets returned
-                        foreach($ImputObject in $ImputObject)
+                        foreach($InputObject in $InputObject)
                         {
-                            Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Image [$ImputObject]"
-                            Write-Output (Invoke-OSApiRequest -Type image -Uri "/v2/images/$ImputObject" -ObjectType 'OS.Image')
+                            Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Image [$InputObject]"
+                            Write-Output (Invoke-OSApiRequest -Type image -Uri "/v2/images/$InputObject" -ObjectType 'OS.Image')
                         }
                     }
                 }

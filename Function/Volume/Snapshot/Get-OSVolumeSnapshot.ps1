@@ -24,10 +24,10 @@ function Get-OSVolumeSnapshot
     [CmdLetBinding(DefaultParameterSetName = 'All')]
     Param
     (
-        [Parameter (ParameterSetName = 'ImputObject', Mandatory = $true, ValueFromPipeline=$true)]
+        [Parameter (ParameterSetName = 'InputObject', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'VolumeSnapshot')]
-        $ImputObject,
+        $InputObject,
 
         [Parameter (ParameterSetName = 'Name', Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -47,14 +47,14 @@ function Get-OSVolumeSnapshot
                     Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get all VolumeSnapshot"
                     Write-Output (Invoke-OSApiRequest -Type volumev3 -Uri "snapshots/detail" -Property 'Snapshots' -ObjectType 'OS.VolumeSnapshot')
                 }
-                'ImputObject'
+                'InputObject'
                 {
-                    foreach($ImputObject in $ImputObject)
+                    foreach($InputObject in $InputObject)
                     {
-                        $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.VolumeSnapshot'
+                        $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.VolumeSnapshot'
 
-                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get VolumeSnapshot [$ImputObject]"
-                        Write-Output (Invoke-OSApiRequest -Type volumev3 -Uri "snapshots/$ImputObject" -Property 'Snapshot' -ObjectType 'OS.VolumeSnapshot')
+                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get VolumeSnapshot [$InputObject]"
+                        Write-Output (Invoke-OSApiRequest -Type volumev3 -Uri "snapshots/$InputObject" -Property 'Snapshot' -ObjectType 'OS.VolumeSnapshot')
                     }
                 }
                 'Name'

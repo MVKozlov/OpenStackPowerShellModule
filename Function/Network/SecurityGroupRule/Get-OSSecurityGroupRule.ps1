@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .PARAMETER Name
 
@@ -26,10 +26,10 @@ function Get-OSSecurityGroupRule
     [CmdLetBinding(DefaultParameterSetName = 'All')]
     Param
     (
-        [Parameter (ParameterSetName = 'ImputObject', Mandatory = $true, ValueFromPipeline=$true)]
+        [Parameter (ParameterSetName = 'InputObject', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'SecurityGroupRule')]
-        $ImputObject,
+        $InputObject,
 
         [Parameter (ParameterSetName = 'Name', Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -53,21 +53,21 @@ function Get-OSSecurityGroupRule
                     Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get all SecurityGroupRule"
                     Write-Output (Invoke-OSApiRequest -Type network -Uri "/v2.0/security-group-rules" -Property 'security_group_rules' -ObjectType 'OS.SecurityGroupRule')
                 }
-                'ImputObject'
+                'InputObject'
                 {
-                    foreach($ImputObject in $ImputObject)
+                    foreach($InputObject in $InputObject)
                     {
                         #inteligent pipline
-                        if($ImputObject.pstypenames[0] -eq 'OS.SecurityGroup')
+                        if($InputObject.pstypenames[0] -eq 'OS.SecurityGroup')
                         {
-                            Get-OSSecurityGroupRule -SecurityGroup $ImputObject
+                            Get-OSSecurityGroupRule -SecurityGroup $InputObject
                         }
                         else 
                         {
-                            $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.SecurityGroupRule'
+                            $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.SecurityGroupRule'
 
-                            Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get SecurityGroupRule [$ImputObject]"
-                            Write-Output (Invoke-OSApiRequest -Type network -Uri "/v2.0/security-group-rules/$ImputObject" -Property 'security_group_rule' -ObjectType 'OS.SecurityGroupRule')
+                            Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get SecurityGroupRule [$InputObject]"
+                            Write-Output (Invoke-OSApiRequest -Type network -Uri "/v2.0/security-group-rules/$InputObject" -Property 'security_group_rule' -ObjectType 'OS.SecurityGroupRule')
                         }
                     }
                 }
@@ -85,7 +85,7 @@ function Get-OSSecurityGroupRule
                     {
                         Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get SecurityGroupRules from SecurityGroup [$SecurityGroup]"
                         
-                        $SecurityGroup = Get-OSSecurityGroup -ImputObject $SecurityGroup
+                        $SecurityGroup = Get-OSSecurityGroup -InputObject $SecurityGroup
 
                         if($SecurityGroup.security_group_rules.id)
                         {

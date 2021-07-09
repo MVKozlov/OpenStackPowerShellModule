@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .PARAMETER Name
 
@@ -26,10 +26,10 @@ function Get-OSGroup
     [CmdLetBinding(DefaultParameterSetName = 'All')]
     Param
     (
-        [Parameter (ParameterSetName = 'ImputObject', Mandatory = $true, ValueFromPipeline=$true)]
+        [Parameter (ParameterSetName = 'InputObject', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Group')]
-        $ImputObject,
+        $InputObject,
 
         [Parameter (ParameterSetName = 'Name', Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -53,14 +53,14 @@ function Get-OSGroup
                     Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get all Group"
                     Write-Output (Invoke-OSApiRequest -Type identity -Uri "groups" -Property 'groups' -ObjectType 'OS.Group')
                 }
-                'ImputObject'
+                'InputObject'
                 {
-                    foreach($ImputObject in $ImputObject)
+                    foreach($InputObject in $InputObject)
                     {
-                        $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Group'
+                        $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Group'
 
-                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Group [$ImputObject]"
-                        Write-Output (Invoke-OSApiRequest -Type identity -Uri "groups/$ImputObject" -Property 'group' -ObjectType 'OS.Group')
+                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Group [$InputObject]"
+                        Write-Output (Invoke-OSApiRequest -Type identity -Uri "groups/$InputObject" -Property 'group' -ObjectType 'OS.Group')
                     }
                 }
                 'Name'

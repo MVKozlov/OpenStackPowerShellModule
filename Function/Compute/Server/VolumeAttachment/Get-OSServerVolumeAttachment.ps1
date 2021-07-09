@@ -3,7 +3,7 @@
 
     .DESCRIPTION
 
-    .PARAMETER ImputObject
+    .PARAMETER InputObject
 
     .INPUTS
 
@@ -25,7 +25,7 @@ function Get-OSServerVolumeAttachment
         [Parameter (ParameterSetName = 'Default', Mandatory = $true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias('ID', 'Identity', 'Server')]
-        $ImputObject
+        $InputObject
     )
 
     process
@@ -34,12 +34,12 @@ function Get-OSServerVolumeAttachment
         {
             Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "start"
 
-            foreach($ImputObject in $ImputObject)
+            foreach($InputObject in $InputObject)
             {
-                $ImputObject = Get-OSObjectIdentifierer -Object $ImputObject -PropertyHint 'OS.Server'
+                $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Server'
 
-                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Server [$ImputObject] VolumeAttachment"
-                Write-Output (Invoke-OSApiRequest -Type compute -Uri "servers/$ImputObject/os-volume_attachments" -Property 'volumeAttachments' -ObjectType 'OS.ServerVolumeAttachment')       
+                Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Server [$InputObject] VolumeAttachment"
+                Write-Output (Invoke-OSApiRequest -Type compute -Uri "servers/$InputObject/os-volume_attachments" -Property 'volumeAttachments' -ObjectType 'OS.ServerVolumeAttachment')       
             }
         }
         catch
