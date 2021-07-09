@@ -1,11 +1,18 @@
 ﻿<#
     .SYNOPSIS
+    Connect to Openstack infrastructure
 
     .DESCRIPTION
+    Connect to Openstack infrastructure
 
     .PARAMETER Credential
+    Connect as specified user
 
-    .PARAMETER Project
+    .PARAMETER Project_id
+    Use project id as identifier
+
+    .PARAMETER Project_Name
+    Use project name as identifier
 
     .PARAMETER Domain
 
@@ -41,9 +48,13 @@ function Connect-OSAccount
         [ValidateNotNullOrEmpty()]
         [System.Management.Automation.PSCredential]$Credential,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = 'name')]
         [ValidateNotNullOrEmpty()]
-        [string]$Project,
+        [string]$Project_Name,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'id')]
+        [ValidateNotNullOrEmpty()]
+        [string]$Project_Id,
 
         [Parameter(Mandatory = $false)]
         [ValidateNotNullOrEmpty()]
@@ -64,6 +75,12 @@ function Connect-OSAccount
         Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message 'start'
  
         $headers = @{"Content-Type" = "application/json"}
+        if ($Project_Name) {
+            $Project = '"name":"{0}"' -f $Project_Name
+        }
+        if ($Project_Id) {
+            $Project = '"id":"{0}"' -f $Project_Id
+        }        
 
         $Body = @"
         {
@@ -73,7 +90,7 @@ function Connect-OSAccount
                         "domain":{
                             "id":"default"
                         },
-                        "name":"$Project"
+                        $Project
                     }
                 },
                 "identity":{
@@ -101,7 +118,7 @@ function Connect-OSAccount
 
         $Global:OS_Username = $Credential.UserName
         $Global:OS_Domain = $Domain
-        $Global:OS_Project = $Project
+        $Global:OS_Project = if ($Project_Name) { $Project_Name } else { $Project_Id }
         $Global:OS_AuthToken = $result.Headers['X-Subject-Token']
         $Global:OS_Endpoints = ($result.Content | ConvertFrom-Json).token.catalog
         $Global:OS_EndpointInterfaceType = $EndpointInterfaceType
