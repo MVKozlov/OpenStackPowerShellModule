@@ -65,10 +65,11 @@ function Get-OSProject
                 }
                 'Name'
                 {
+                    $projects = Get-OSProject
                     foreach($Name in $Name)
                     {
                         Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Project [$Name]"
-                        Write-Output (Get-OSProject | ?{$_.name -like $Name})
+                        Write-Output ( $projects | Where-Object {$_.name -like $Name} )
                     }
                 }
                 'User'
