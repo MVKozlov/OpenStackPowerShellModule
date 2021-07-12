@@ -64,12 +64,12 @@
     {
       $BodyJson = (ConvertTo-Json -InputObject $Body -Depth 99)
       Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "use request body [$BodyJson]"
-      $Response = @(Invoke-WebRequest -Method $HTTPVerb -Uri $FullUri -Body $BodyJson -Headers $APIRequestHeader -Verbose:$false)
+      $Response = @(Invoke-WebRequest -Method $HTTPVerb -Uri $FullUri -Body $BodyJson -Headers $APIRequestHeader -Verbose:$false -UseBasicParsing @OpenStackProxySettings)
     }
     else 
     {
       Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "no request body defined"
-      $Response = @(Invoke-WebRequest -Method $HTTPVerb -Uri $FullUri -Headers $APIRequestHeader -Verbose:$false)
+      $Response = @(Invoke-WebRequest -Method $HTTPVerb -Uri $FullUri -Headers $APIRequestHeader -Verbose:$false -UseBasicParsing @OpenStackProxySettings)
     }
     Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "invoked API request, StatusCode [$($Response.StatusCode)], StatusDescription [$($Response.StatusDescription)]"
 

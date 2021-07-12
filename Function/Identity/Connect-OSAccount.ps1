@@ -115,7 +115,7 @@ function Connect-OSAccount
         Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "POST - $AuthenticationUri"
         Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "Body [$Body]"
 
-        $result = Invoke-WebRequest -Headers $headers -Method Post -Body $Body -Uri $AuthenticationUri
+        $result = Invoke-WebRequest -Headers $headers -Method Post -Body $Body -Uri $AuthenticationUri -UseBasicParsing @OpenStackProxySettings
 
         $Global:OS_Username = $Credential.UserName
         $Global:OS_Domain = $Domain
