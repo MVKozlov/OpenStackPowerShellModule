@@ -8,10 +8,10 @@
     .PARAMETER Credential
     Connect as specified user
 
-    .PARAMETER Project_id
+    .PARAMETER Id
     Use project id as identifier
 
-    .PARAMETER Project_Name
+    .PARAMETER Name
     Use project name as identifier
 
     .PARAMETER Domain
@@ -50,11 +50,12 @@ function Connect-OSAccount
 
         [Parameter(Mandatory = $true, ParameterSetName = 'name')]
         [ValidateNotNullOrEmpty()]
-        [string]$Project_Name,
+        [Alias('Project')]
+        [string]$Name,
 
         [Parameter(Mandatory = $true, ParameterSetName = 'id')]
         [ValidateNotNullOrEmpty()]
-        [string]$Project_Id,
+        [string]$Id,
 
         [Parameter(Mandatory = $false)]
         [ValidateNotNullOrEmpty()]
@@ -75,11 +76,11 @@ function Connect-OSAccount
         Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message 'start'
  
         $headers = @{"Content-Type" = "application/json"}
-        if ($Project_Name) {
-            $Project = '"name":"{0}"' -f $Project_Name
+        if ($Name) {
+            $Project = '"name":"{0}"' -f $Name
         }
-        if ($Project_Id) {
-            $Project = '"id":"{0}"' -f $Project_Id
+        if ($Id) {
+            $Project = '"id":"{0}"' -f $Id
         }        
 
         $Body = @"
