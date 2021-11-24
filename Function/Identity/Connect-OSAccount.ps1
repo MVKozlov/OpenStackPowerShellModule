@@ -26,6 +26,10 @@
 
     defines which type of endpoint is used for all API requests (admin, internal or public), default is admin.
 
+    .PARAMETER RegionName
+
+    defines default region name
+
     .INPUTS
 
     .OUTPUTS
@@ -68,7 +72,10 @@ function Connect-OSAccount
         [Parameter(Mandatory = $false)]
         [ValidateNotNullOrEmpty()]
         [ValidateSet('admin', 'internal', 'public')]
-        [string]$EndpointInterfaceType = 'admin' 
+        [string]$EndpointInterfaceType = 'admin',
+
+        [Parameter(Mandatory = $false)]
+        [string]$RegionName
     )
 
     try 
@@ -123,6 +130,7 @@ function Connect-OSAccount
         $Global:OS_AuthToken = $result.Headers['X-Subject-Token']
         $Global:OS_Endpoints = ($result.Content | ConvertFrom-Json).token.catalog
         $Global:OS_EndpointInterfaceType = $EndpointInterfaceType
+        $Global:OS_DefaultRegionName = $RegionName
     }
     catch 
     {
@@ -132,6 +140,7 @@ function Connect-OSAccount
         $Global:OS_AuthToken = $null
         $Global:OS_Endpoints = $null
         $Global:OS_EndpointInterfaceType = $null
+        $Global:OS_DefaultRegionName = $null
 
         Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type ERROR -Exception $_
         throw

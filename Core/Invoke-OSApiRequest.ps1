@@ -21,6 +21,9 @@
     $Body,
 
     [Parameter (ParameterSetName = 'Default', Mandatory = $false)]
+    [string]$RegionName,
+
+    [Parameter (ParameterSetName = 'Default', Mandatory = $false)]
     [string]$ObjectType,
 
     [Parameter (ParameterSetName = 'Default', Mandatory = $false)]
@@ -35,6 +38,9 @@
   )
 
   $StartTimestamp = Get-Date
+  if (-not $PSBoundParameters.ContainsKey('RegionName') -and $Global:OS_DefaultRegionName) {
+    $RegionName = $Global:OS_DefaultRegionName
+  }
 
   try 
   {
@@ -52,10 +58,12 @@
     }
 
     Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type DEBUG -Message "get Endpoint, Type [$Type]"
-    $Endpoint = $Global:OS_Endpoints | ?{$_.type -eq $Type}
+    $Endpoint = $Global:OS_Endpoints | Where-Object { $_.type -eq $Type }
     Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type DEBUG -Message "Endpoint found, ID [$($Endpoint.id)], Name [$($Endpoint.name)], Type [$($Endpoint.type)]"
 
-    $EndpointUri = ($Endpoint.endpoints | ?{$_.interface -eq $Global:OS_EndpointInterfaceType}).url
+    $EndpointUri = ($Endpoint.endpoints | Where-Object {
+      $_.interface -eq $Global:OS_EndpointInterfaceType -and (-not $RegionName -or $_.region -eq $RegionName)
+    }).url
 
     $FullUri = "$EndpointUri/$Uri"
 
@@ -128,6 +136,7 @@
       $Global:OS_Project = $null
       $Global:OS_AuthToken = $null
       $Global:OS_Endpoints = $null
+      $Global:OS_DefaultRegionName = $null
     }
 
     throw
