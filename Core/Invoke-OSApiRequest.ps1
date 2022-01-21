@@ -65,64 +65,72 @@
       $_.interface -eq $Global:OS_EndpointInterfaceType -and (-not $RegionName -or $_.region -eq $RegionName)
     }).url
 
-    $FullUri = "$EndpointUri/$Uri"
+    $nextMarker = $null
+    do {
+      $FullUri = "$EndpointUri/$Uri"
 
-    Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type DEBUG -Message "invoke API request [$FullUri], HTTPVerb [$HTTPVerb]"
-    if($Body -and (ConvertTo-Json -InputObject $Body -Compress) -ne '{}') 
-    {
-      $BodyJson = (ConvertTo-Json -InputObject $Body -Depth 99)
-      Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "use request body [$BodyJson]"
-      $Response = @(Invoke-WebRequest -Method $HTTPVerb -Uri $FullUri -Body $BodyJson -Headers $APIRequestHeader -Verbose:$false -UseBasicParsing @OpenStackProxySettings)
-    }
-    else 
-    {
-      Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "no request body defined"
-      $Response = @(Invoke-WebRequest -Method $HTTPVerb -Uri $FullUri -Headers $APIRequestHeader -Verbose:$false -UseBasicParsing @OpenStackProxySettings)
-    }
-    Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "invoked API request, StatusCode [$($Response.StatusCode)], StatusDescription [$($Response.StatusDescription)]"
-
-    #output header for debugging purposes 
-    foreach($Header in $Response.Headers.GetEnumerator())
-    {
-      Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "Header [$($Header.Key)]=[$($Header.Value)]"
-    }
-
-    $Data = $Response.Content | ConvertFrom-Json
-
-    Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "Raw Data [$($Data | ConvertTo-Json -Depth 10)]"
-
-    if(!$NoOutput)
-    {
-      #region output object
-      if($ObjectType)
+      Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type DEBUG -Message "invoke API request [$FullUri], HTTPVerb [$HTTPVerb]"
+      if($Body -and (ConvertTo-Json -InputObject $Body -Compress) -ne '{}') 
       {
-        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "set ObjectType [$ObjectType]"
+        $BodyJson = (ConvertTo-Json -InputObject $Body -Depth 99)
+        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "use request body [$BodyJson]"
+        $Response = @(Invoke-WebRequest -Method $HTTPVerb -Uri $FullUri -Body $BodyJson -Headers $APIRequestHeader -Verbose:$false -UseBasicParsing @OpenStackProxySettings)
       }
-
-      if($Property)
+      else 
       {
-        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "output data with Property [$Property]"
-        $Data = @(Invoke-Expression "`$Data.$Property")
+        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "no request body defined"
+        $Response = @(Invoke-WebRequest -Method $HTTPVerb -Uri $FullUri -Headers $APIRequestHeader -Verbose:$false -UseBasicParsing @OpenStackProxySettings)
       }
-
-      foreach($DataItem in $Data)
+      Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "invoked API request, StatusCode [$($Response.StatusCode)], StatusDescription [$($Response.StatusDescription)]"
+  
+      #output header for debugging purposes 
+      foreach($Header in $Response.Headers.GetEnumerator())
       {
-        if($DataItem)
+        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "Header [$($Header.Key)]=[$($Header.Value)]"
+      }
+  
+      $Data = $Response.Content | ConvertFrom-Json
+  
+      Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "Raw Data [$($Data | ConvertTo-Json -Depth 10)]"
+  
+      $nextMarker = $Data.next
+
+      if(!$NoOutput)
+      {
+        #region output object
+        if($ObjectType)
         {
-          if($ObjectType)
+          Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "set ObjectType [$ObjectType]"
+        }
+  
+        if($Property)
+        {
+          Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "output data with Property [$Property]"
+          $Data = @(Invoke-Expression "`$Data.$Property")
+        }
+  
+        foreach($DataItem in $Data)
+        {
+          if($DataItem)
           {
-            $DataItem.pstypenames.Insert(0, $ObjectType)
+            if($ObjectType)
+            {
+              $DataItem.pstypenames.Insert(0, $ObjectType)
+            }
+      
+            Write-Output $DataItem 
           }
-    
-          Write-Output $DataItem 
+          else 
+          {
+            Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "no output data"
+          }
         }
-        else 
-        {
-          Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "no output data"
-        }
+        #endregion
       }
-      #endregion
-    }
+      if ($nextMarker) {
+        $Uri = $nextMarker
+      }
+    } while ($nextMarker)
   }
   catch 
   {
