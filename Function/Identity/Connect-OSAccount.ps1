@@ -127,7 +127,7 @@ function Connect-OSAccount
         $Global:OS_Username = $Credential.UserName
         $Global:OS_Domain = $Domain
         $Global:OS_Project = if ($Project_Name) { $Project_Name } else { $Project_Id }
-        $Global:OS_AuthToken = $result.Headers['X-Subject-Token']
+        $Global:OS_AuthToken = $result.Headers['X-Subject-Token'] | Select-Object -First 1
         $Global:OS_Endpoints = ($result.Content | ConvertFrom-Json).token.catalog
         $Global:OS_EndpointInterfaceType = $EndpointInterfaceType
         $Global:OS_DefaultRegionName = $RegionName
