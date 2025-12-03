@@ -17,14 +17,16 @@
     Get-OSProxySetting
 #>
 function Set-OSProxySetting {
-[CmdletBinding(SupportsShouldProcess=$true)]
+[CmdletBinding(SupportsShouldProcess=$true, DefaultParameterSetName='plain')]
 param(
-    [Parameter(ValueFromPipelineByPropertyName)]
+    [Parameter(ValueFromPipelineByPropertyName, ParameterSetName='plain')]
     [Uri]$Proxy,
-    [Parameter(ValueFromPipelineByPropertyName)]
+    [Parameter(ValueFromPipelineByPropertyName, ParameterSetName='plain')]
     [PSCredential]$ProxyCredential,
-    [Parameter(ValueFromPipelineByPropertyName)]
-    [switch]$ProxyUseDefaultCredentials
+    [Parameter(ValueFromPipelineByPropertyName, ParameterSetName='plain')]
+    [switch]$ProxyUseDefaultCredentials,
+    [Parameter(ParameterSetName='default')]
+    [bool]$UseDefaultSystemProxy
 )
     BEGIN {
     }
@@ -54,6 +56,24 @@ param(
             }
             else {
                 [void]$OpenStackProxySettings.Remove('ProxyUseDefaultCredentials')
+            }
+            if ($PSCmdlet.ParameterSetName -eq 'default') {
+                if ($UseDefaultSystemProxy) {
+                    if ($PSVersionTable.PSVersion.Major -gt 5) {
+                        [System.Net.Http.HttpClient]::DefaultProxy = $OpenStackDefaultSystemProxy
+                    }
+                    else {
+                        [System.Net.WebRequest]::DefaultWebProxy = $OpenStackDefaultSystemProxy
+                    }
+                }
+                else {
+                    if ($PSVersionTable.PSVersion.Major -gt 5) {
+                        [System.Net.Http.HttpClient]::DefaultProxy = $OpenStackEmptySystemProxy
+                    }
+                    else {
+                        [System.Net.WebRequest]::DefaultWebProxy = $OpenStackEmptySystemProxy
+                    }
+                }
             }
         }
     }
