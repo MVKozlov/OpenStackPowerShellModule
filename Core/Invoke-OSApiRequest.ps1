@@ -89,15 +89,16 @@
         Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "Header [$($Header.Key)]=[$($Header.Value)]"
       }
   
-      try {
+      if ($null -eq $Response.Content)
+      {
+        $Data = @()
+        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "Raw Data [null]"
+      }
+      else {
         $Data = $Response.Content | ConvertFrom-Json
-        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "Raw Data [$($Data | ConvertTo-Json -Depth 10)]"
+        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type TRACE -Message "Raw Data [$($Response.Content | ConvertTo-Json -Depth 10)]"
       }
-      catch {
-        Write-Warning "Invalid output"
-        $Data = {}
-      }
-  
+
       $nextMarker = $Data.next
 
       if(!$NoOutput)
