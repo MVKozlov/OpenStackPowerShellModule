@@ -3,9 +3,15 @@
 
     .DESCRIPTION
 
-    .PARAMETER Port
+    .PARAMETER InputObject
 
-    .PARAMETER APIKey
+    .PARAMETER Name
+
+    .PARAMETER IPAddress
+
+    .PARAMETER MacAddress
+
+    .PARAMETER Server
 
     .INPUTS
 

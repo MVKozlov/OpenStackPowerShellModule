@@ -39,7 +39,7 @@ function Remove-OSPort
                 $InputObject = Get-OSObjectIdentifierer -Object $InputObject -PropertyHint 'OS.Port'
 
                 Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "remove Port [$InputObject]"
-                
+
                 Invoke-OSApiRequest -HTTPVerb Delete -Type network -Uri "/v2.0/ports/$InputObject" -NoOutput
             }
         }

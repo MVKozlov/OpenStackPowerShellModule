@@ -59,10 +59,14 @@ function Get-OSNetwork
                 }
                 'Name'
                 {
-                    foreach($Name in $Name)
-                    {
-                        Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Port [$Name]"
-                        Write-Output (Get-OSNetwork | ?{$_.name -like $Name})
+                    Get-OSNetwork | ForEach-Object {
+                        foreach($Name in $Name)
+                        {
+                            Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "get Network [$Name]"
+                            if ($_.name -like $Name) {
+                                Write-Output $_
+                            }
+                        }
                     }
                 }
                 default
