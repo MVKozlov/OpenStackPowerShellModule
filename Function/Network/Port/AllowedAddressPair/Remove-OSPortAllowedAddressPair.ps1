@@ -51,7 +51,7 @@ function Remove-OSPortAllowedAddressPair
 
             switch ($PsCmdlet.ParameterSetName)
             {
-                'InputObject'
+                'IpAddress'
                 {
                     foreach($InputObject in $InputObject)
                     {

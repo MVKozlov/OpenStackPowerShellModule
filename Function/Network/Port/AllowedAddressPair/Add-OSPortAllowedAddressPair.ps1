@@ -61,16 +61,19 @@ function Add-OSPortAllowedAddressPair
                         throw "AllowedAddressPair already contains IpAddress [$IpAddress]."
                     }
 
-                    $BodyProperties = @{
-                        ip_address  = $IpAddress
+                    $allowed_pairs = @()
+                    foreach ($ip in $IpAddress) {
+                        $pair = @{ ip_address = $ip }
+                        if ($PSBoundParameters.ContainsKey('MacAddress')) { $pair.mac_address = $MacAddress }
+                        $allowed_pairs += $pair
                     }
-                    if($PSBoundParameters.ContainsKey('MacAddress')){$BodyProperties.Add('mac_address', $MacAddress)}
+
                     $AllowedAddressPair = @($Port.allowed_address_pairs)
-                    $AllowedAddressPair += $BodyProperties
+                    $AllowedAddressPair += $allowed_pairs
                     $BodyObject = [PSCustomObject]@{port=[PSCustomObject]@{allowed_address_pairs=$AllowedAddressPair}}
 
                     Write-OSLogging -Source $MyInvocation.MyCommand.Name -Type INFO -Message "add AllowedAddressPair [$IpAddress] to Port [$InputObject], MacAddress [$MacAddress]"
-                    
+
                     Write-Output (Invoke-OSApiRequest -HTTPVerb Put -Type network -Uri "/v2.0/ports/$InputObject" -Property 'port' -ObjectType 'OS.Port' -Body $BodyObject)
                 }
             }
